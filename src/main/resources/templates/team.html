@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football League: team</title>
+    <link rel="stylesheet" href="https://igoradamenko.github.io/awsm.css/css/awsm.min.css">
+    <style>
+        dt {
+            display: inline;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <!--/*@thymesVar id="team" type="java.lang.String"*/-->
+    <dt th:text="${team.teamName}"></dt>
+    <dt th:text="${#dates.format(team.founded, 'yyyy-MM-dd')}"></dt>
+
+    <dl th:each="player : ${team.players}">
+        <a th:href="@{'/players/' + ${player.id}}">
+            <dt th:text="${player.firstName}"></dt>
+            <dt th:text="${player.lastName}"></dt>
+            <dt th:text="${#dates.format(player.birthDate, 'yyyy-MM-dd')}"></dt>
+        </a>
+    </dl>
+</main>
+
+</body>
+</html>
