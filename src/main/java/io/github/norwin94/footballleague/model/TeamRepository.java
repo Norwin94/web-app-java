@@ -14,6 +14,8 @@ public interface TeamRepository {
 
     Optional<Team> findById(Integer i);
 
+    Optional<Team> findByTeamName(String name);
+
     boolean existsById(Integer id);
 
     Team save(Team entity);

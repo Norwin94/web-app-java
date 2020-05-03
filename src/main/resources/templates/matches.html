@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
 
-    <title>Football league: teams</title>
+    <title>Football league: matches</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/starter-template/">
 
@@ -57,14 +57,14 @@
             <li class="nav-item">
                 <a class="nav-link" href="/#">Home </a>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="">Teams <span class="sr-only">(current)</span></a>
+            <li class="nav-item">
+                <a class="nav-link" href="/teams">Teams</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/players">Players</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/matches">Matches</a>
+            <li class="nav-item active">
+                <a class="nav-link" href="">Matches <span class="sr-only">(current)</span></a>
             </li>
         </ul>
         <a th:href="@{'/logout/'}">
@@ -74,35 +74,38 @@
 </nav>
 
 <main>
+    <!--/*@thymesVar id="matchesAll" type="java.util.List<io.github.norwin94.footballleague.model.Match>"*/-->
     <!--/*@thymesVar id="teamsAll" type="java.util.List<io.github.norwin94.footballleague.model.Team>"*/-->
-    <h1 th:if="${teamsAll.empty}">No teams</h1>
+    <h1 th:if="${matchesAll.empty}">No matches</h1>
     <br>
     <br>
     <table class="table table-sm table-hover table-bordered table-dark">
         <thead>
         <tr>
-            <th> Name    </th>
-            <th> Founded </th>
+            <th> Date </th>
+            <th> Home  </th>
+            <th> Away  </th>
             <th> Action  </th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="team : ${teamsAll}">
-                <td><a th:href="@{'/teams/' + ${team.id}}" th:text="${team.teamName}"/></td>
-                <td th:text="${#dates.format(team.founded, 'yyyy-MM-dd')}"></td>
+        <tr th:each="match : ${matchesAll}">
+                <td th:text="${#dates.format(match.matchDate, 'yyyy-MM-dd')}"></td>
+                <td th:text="${match.homeTeam.teamName}"></td>
+                <td th:text="${match.awayTeam.teamName}"></td>
                 <td>
-                    <a th:href="@{'/teams/' + ${team.id} + '/del'}">
-                        <button type="submit" name="deleteTeam" class="btn btn-danger" sec:authorize="hasRole('ADMIN')">Delete</button>
+                    <a th:href="@{'/matches/' + ${match.id} + '/del'}">
+                        <button type="submit" name="deleteMatch" class="btn btn-danger" sec:authorize="hasRole('ADMIN')">Delete</button>
                     </a>
-                    <button type="submit" name="editTeam" class="btn btn-warning">Edit</button>
+                    <button type="submit" name="editMatch" class="btn btn-warning">Edit</button>
                 </td>
         </tr>
         </tbody>
     </table>
     <div class="text-center">
         <div>
-            <a th:href="@{'/teams/add'}">
-                <button type="submit" class="btn btn-primary">Add new Team</button>
+            <a th:href="@{'/matches/addmatch'}">
+                <button type="submit" class="btn btn-primary">Add new Match</button>
             </a>
         </div>
     </div>

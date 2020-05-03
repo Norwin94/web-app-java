@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football League: matches</title>
+    <link rel="stylesheet" href="https://igoradamenko.github.io/awsm.css/css/awsm.min.css">
+    <style>
+        dt {
+            display: inline;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <!--/*@thymesVar id="message" type="java.lang.String"*/-->
+    <h1 th:if="${message != null}" th:text="${message}"></h1>
+    <!--/*@thymesVar id="match" type="io.github.norwin94.footballleague.model.Match"*/-->
+    <!--/*@thymesVar id="teamsAll" type="java.util.List<io.github.norwin94.footballleague.model.Team>"*/-->
+    <form action="#" method="post" th:action="@{/matches/addmatch}" th:object="${match}">
+        <p th:if="${#fields.hasAnyErrors()}" th:errors="*{all}"></p>
+        <fieldset>
+            <legend>New match</legend>
+            <label>Home team
+                <select th:field="${match.homeTeam.id}">
+                    <option th:each="team : ${teamsAll}"
+                            th:value="${team.id}" th:text="${team.teamName}" th:field="${match.homeTeam.id}">Team name
+                    </option>
+                </select>
+            </label>
+            <label>Away team
+                <select th:field="${match.awayTeam.id}">
+                <option th:each="team : ${teamsAll}"
+                            th:value="${team.id}" th:text="${team.teamName}" th:field="${match.awayTeam.id}">Team name
+                    </option>
+                </select>
+            </label>
+            <label>Match date
+                <input type="date"
+                       min="2020-05-01"
+                       th:field="${match.matchDate}"/>
+            </label>
+        </fieldset>
+        <p>
+            <button type="submit" name="addMatch">Add</button>
+        </p>
+    </form>
+</main>
+
+</body>
+</html>

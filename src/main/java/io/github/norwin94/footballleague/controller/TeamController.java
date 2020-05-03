@@ -59,8 +59,6 @@ public class TeamController {
 
     @GetMapping(value = "/add")
     String showTeams(Model model) {
-        var TeamToEdit = new Team();
-        TeamToEdit.setTeamName("ololo");
         model.addAttribute("team", new Team());
         return "add";
     }

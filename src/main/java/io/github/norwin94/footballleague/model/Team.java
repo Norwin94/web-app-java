@@ -23,6 +23,29 @@ public class Team {
     private Audit audit = new Audit();
     @OneToMany(mappedBy = "team", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE}) //(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<Player> players = new ArrayList<>();
+    @OneToMany(mappedBy="awayTeam")
+    private List<Match> awayTeamMatches = new ArrayList<>();
+    @OneToMany(mappedBy="homeTeam")
+    private List<Match> homeTeamMatches = new ArrayList<>();
+
+
+    public List<Match> getAwayTeamMatches() {
+        return awayTeamMatches;
+    }
+
+    public void setAwayTeamMatches(List<Match> awayTeamMatches) {
+        this.awayTeamMatches = awayTeamMatches;
+    }
+
+
+
+    public List<Match> getHomeTeamMatches() {
+        return homeTeamMatches;
+    }
+
+    public void setHomeTeamMatches(List<Match> homeTeamMatches) {
+        this.homeTeamMatches = homeTeamMatches;
+    }
 
     public Team() {
 
