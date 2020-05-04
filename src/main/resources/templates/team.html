@@ -15,6 +15,7 @@
 <body>
 <main>
     <!--/*@thymesVar id="team" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="playersAll" type="io.github.norwin94.footballleague.model.Player"*/-->
     <dt th:text="${team.teamName}"></dt>
     <dt th:text="${#dates.format(team.founded, 'yyyy-MM-dd')}"></dt>
 
@@ -25,6 +26,34 @@
             <dt th:text="${#dates.format(player.birthDate, 'yyyy-MM-dd')}"></dt>
         </a>
     </dl>
+
+    <form action="#" th:action="@{'/teams/' + ${team.id}}" th:object="${team}" method="post">
+        <p>Team name
+            <input type="text" th:field="*{teamName}" th:text="*{teamName}" />
+        </p>
+        <p>Date found
+            <input type="date" min="1875-01-01" th:field="*{founded}" th:text="*{founded}" />
+        </p>
+        <p>
+            <button type="submit" name="editTeam">Edit Team</button>
+        </p>
+    </form>
+
+    <form action="#" th:action="@{'/teams/' + ${team.id}}" th:object="${team}" method="post">
+        <label>Add existing player
+            <select>
+                <option th:each="player : ${playersAll}"
+                        th:value="${player.id}"
+                        th:text="${player.lastName}"
+                        > Existing player
+                </option>
+            </select>
+            <p>
+                <button type="submit" name="addExistingPlayer">Add existing player</button>
+            </p>
+        </label>
+    </form>
+
 </main>
 
 </body>

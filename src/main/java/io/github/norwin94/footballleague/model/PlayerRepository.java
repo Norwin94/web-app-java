@@ -20,4 +20,6 @@ public interface PlayerRepository {
     List<Player> findAllByTeam_Id(Integer teamId);
 
     Optional<Team>  findByTeam(Integer id);
+
+    void deleteById(Integer id);
 }

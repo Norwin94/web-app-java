@@ -17,6 +17,7 @@
     <!--/*@thymesVar id="message" type="java.lang.String"*/-->
     <h1 th:if="${message != null}" th:text="${message}"></h1>
     <!--/*@thymesVar id="team" type="io.github.norwin94.footballleague.model.Team"*/-->
+    <!--/*@thymesVar id="playersAll" type="java.util.List<io.github.norwin94.footballleague.model.Player>"*/-->
     <form action="#" method="post" th:action="@{/teams/add}" th:object="${team}">
         <p th:if="${#fields.hasAnyErrors()}" th:errors="*{all}"></p>
         <fieldset>
@@ -37,6 +38,9 @@
                 </label>
                 <label>Last name
                     <input type="text" th:field="*{players[__${stat.index}__].lastName}" />
+                </label>
+                <label>Id
+                    <input type="text" th:field="*{players[__${stat.index}__].id}" />
                 </label>
                 <label>Birth date
                     <input type="date" min="1950-01-01" max="2010-01-01" th:field="*{players[__${stat.index}__].birthDate}"/>

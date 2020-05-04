@@ -7,7 +7,6 @@ import io.github.norwin94.footballleague.model.TeamRepository;
 import io.micrometer.core.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -28,9 +26,11 @@ import java.util.List;
 public class TeamController {
     private static final Logger logger = LoggerFactory.getLogger(TeamController.class);
     private final TeamRepository repository;
+    private final PlayerRepository playerRepository;
 
-     TeamController(final TeamRepository repository, PlayerRepository playerRepository) {
+     TeamController(final TeamRepository repository , PlayerRepository playerRepository1) {
         this.repository = repository;
+         this.playerRepository = playerRepository1;
      }
 
     /////////////////////////////////////////////////////////////////////////////
@@ -59,34 +59,16 @@ public class TeamController {
 
     @GetMapping(value = "/add")
     String showTeams(Model model) {
+         model.addAttribute("playersAll", playerRepository.findAll());
         model.addAttribute("team", new Team());
         return "add";
     }
 
-    @PostMapping(params = "addPlayer", value = "/add")
-    String addPlayer(@ModelAttribute("team") Team current) {
-         current.getPlayers().add(new Player());
-         return "add";
-    }
 
-    @PostMapping(params = "addTeam", value = "/add")
-    String addTeam(@ModelAttribute("team") @Valid Team current,
-                   BindingResult bindingResult,
-                   Model model
-    ) {
-         if(bindingResult.hasErrors()) {
-             return "add";
-         }
-        //current.getPlayers().get(0).setTeam(current);
-        for (Player temp : current.getPlayers()) {
-            temp.setTeam(current);
-        }
-        repository.save(current);
-        model.addAttribute("team", new Team());
-        model.addAttribute("message", "Team added!");
-        model.addAttribute("teamsAll", repository.findAll());
-        return "teams";
-    }
+
+
+
+
 
 
     /////////////////////////////////////////////////////////////////////////////
@@ -97,6 +79,7 @@ public class TeamController {
          Team team = repository.findById(id)
                  .orElseThrow(()-> new IllegalStateException("Not found this id"));
         model.addAttribute("team", team);
+        model.addAttribute("playersAll", playerRepository.findAll());
         return "team";
     }
 
@@ -121,32 +104,53 @@ public class TeamController {
          return ResponseEntity.ok(repository.findPlayersById(id));
     }
 
-    @PutMapping("/{id}")
-    ResponseEntity<?> updateTeam(@PathVariable int id, @RequestBody @Valid Team toUpdate) {
-         if(!repository.existsById(id)){
-             return ResponseEntity.notFound().build();
-         }
-         repository.findById(id)
-                 .ifPresent(team -> {
-                     team.updateFrom(toUpdate);
-                     repository.save(team);
-                 });
-         return ResponseEntity.noContent().build();
+    @PostMapping(params = "editTeam", value = "/{id}")
+    String editTeam(@ModelAttribute("team") @Valid Team toUpdate,
+                   BindingResult bindingResult,
+                   Model model,
+                    @PathVariable Integer id
+    ) {
+       // Team temp = repository.findById(id).get();
+       // temp.updateFrom(toUpdate);
+        repository.save(toUpdate);
+        return "team";
     }
 
-    @PutMapping("/{id}/addPlayer")
-    ResponseEntity<?> updateTeamWithPlayer(@PathVariable int id, @RequestBody @Valid Player toUpdate) {
-        if(!repository.existsById(id)){
-            return ResponseEntity.notFound().build();
-        }
-        repository.findById(id)
-                .ifPresent(team -> {
-                    team.updateFrom(team.addPlayer(toUpdate));
-                    repository.save(team);
-                });
-        return ResponseEntity.noContent().build();
+    @PostMapping(params = "addPlayer", value = "/add")
+    String addPlayer(@ModelAttribute("team") Team current, Model model) {
+        model.addAttribute("playersAll", playerRepository.findAll());
+        current.getPlayers().add(new Player());
+        return "add";
     }
-/*
+
+    @PostMapping(params = "addExistingPlayer", value = "/add")
+    String addExistingPlayer(@ModelAttribute("team") Team current, Model model) {
+        model.addAttribute("playersAll", playerRepository.findAll());
+        current.addPlayer(playerRepository.findById(37).get());
+        return "add";
+    }
+
+
+    @PostMapping(params = "addTeam", value = "/add")
+    String addTeam(@ModelAttribute("team") @Valid Team current,
+                   BindingResult bindingResult,
+                   Model model
+    ) {
+        if(bindingResult.hasErrors()) {
+            return "add";
+        }
+        //current.getPlayers().get(0).setTeam(current);
+        for (Player temp : current.getPlayers()) {
+            temp.setTeam(current);
+        }
+        repository.save(current);
+        model.addAttribute("team", new Team());
+        model.addAttribute("message", "Team added!");
+        model.addAttribute("teamsAll", repository.findAll());
+        return "teams";
+    }
+
+    /*
     @PutMapping("/{id}/addPlayer/{srid}")
     ResponseEntity<?> updateTeamWithPlayer(@PathVariable int id, @PathVariable int srid) {
         if(!repository.existsById(id)){
@@ -160,7 +164,7 @@ public class TeamController {
                 });
         return ResponseEntity.noContent().build();
     }
-*/
+
     //nie dziala, gdy teamName is null, bo teamName w Team ma @NotBlank
     //@Transactional tutaj dodal, rollbackuje gdy nie przejdzie cale
     @PatchMapping("/{id}")
@@ -179,4 +183,5 @@ public class TeamController {
 
         return ResponseEntity.noContent().build();
     }
+*/
 }

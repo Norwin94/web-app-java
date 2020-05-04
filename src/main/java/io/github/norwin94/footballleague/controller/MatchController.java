@@ -34,7 +34,6 @@ public class MatchController {
     @Secured("ROLE_ADMIN")
     @GetMapping(value = "/{id}/del")
     String deleteMatch(@PathVariable Integer id, Model model) {
-
         repository.deleteById(id);
         model.addAttribute("matchesAll", repository.findAll());
         return "matches";
@@ -78,7 +77,7 @@ public class MatchController {
     }
 
 /*
-    @GetMapping("/matches")
+    @GetMapping
     ResponseEntity<List<Match>> readAllMatches(Pageable page) {
         logger.info("Custom pageable");
         return ResponseEntity.ok(repository.findAll(page).getContent());

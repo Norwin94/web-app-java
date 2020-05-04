@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football League: matches</title>
+    <link rel="stylesheet" href="https://igoradamenko.github.io/awsm.css/css/awsm.min.css">
+    <style>
+        dt {
+            display: inline;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <!--/*@thymesVar id="message" type="java.lang.String"*/-->
+    <h1 th:if="${message != null}" th:text="${message}"></h1>
+    <!--/*@thymesVar id="player" type="io.github.norwin94.footballleague.model.Player"*/-->
+    <!--/*@thymesVar id="teamsAll" type="java.util.List<io.github.norwin94.footballleague.model.Team>"*/-->
+    <form action="#" method="post" th:action="@{/players/addplayer}" th:object="${player}">
+        <p th:if="${#fields.hasAnyErrors()}" th:errors="*{all}"></p>
+        <fieldset>
+            <legend>New player</legend>
+            <label>First name
+                <input type="text" th:field="${player.firstName}" />
+            </label>
+            <label>Last name
+                <input type="text" th:field="${player.lastName}" />
+            </label>
+            <label>Birth date
+                <input type="date" th:field="${player.birthDate}"/>
+            </label>
+            <label>Team
+                <select th:field="${player.team.id}">
+                    <option th:each="team : ${teamsAll}"
+                            th:value="${team.id}" th:text="${team.teamName}" th:field="${player.team.id}">Team name
+                    </option>
+                </select>
+            </label>
+        </fieldset>
+        <p>
+            <button type="submit" name="addPlayer">Add</button>
+        </p>
+    </form>
+</main>
+
+</body>
+</html>

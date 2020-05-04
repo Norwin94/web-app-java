@@ -1,39 +1,79 @@
 package io.github.norwin94.footballleague.controller;
 
 import io.github.norwin94.footballleague.logic.PlayerService;
-import io.github.norwin94.footballleague.model.Player;
-import io.github.norwin94.footballleague.model.PlayerRepository;
-import io.github.norwin94.footballleague.model.Team;
-import io.github.norwin94.footballleague.model.TeamRepository;
-import org.apache.tomcat.util.http.parser.MediaType;
+import io.github.norwin94.footballleague.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MimeType;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.awt.*;
-import java.net.URI;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-@RestController
+@Controller
+//@Secured("ROLE_USER")
+@RequestMapping("/players")
 public class PlayerController {
     private static final Logger logger = LoggerFactory.getLogger(PlayerController.class);
     private final PlayerRepository repository;
+    private final TeamRepository teamRepository;
     private final PlayerService service;
 
-    PlayerController(final PlayerRepository repository, PlayerService service) {
+    PlayerController(final PlayerRepository repository, TeamRepository teamRepository, PlayerService service) {
         this.repository = repository;
+        this.teamRepository = teamRepository;
         this.service = service;
     }
 
-    @PostMapping("/players")
-    ResponseEntity<Player> createPlayer(@RequestBody @Valid Player toCreate) {
-        Player result = repository.save(toCreate);
-        return ResponseEntity.created(URI.create("/" + result.getId())).body(result);
+    @Secured("ROLE_ADMIN")
+    @GetMapping(value = "/{id}/del")
+    String deleteMatch(@PathVariable Integer id, Model model) {
+        repository.deleteById(id);
+        model.addAttribute("playersAll", repository.findAll());
+        return "players";
+    }
+
+    @PostMapping(params = "addPlayer", value = "/addplayer")
+    String addTeam(@ModelAttribute("player") @Valid Player current,
+                   BindingResult bindingResult,
+                   Model model
+    ) {
+        if(bindingResult.hasErrors()) {
+            return "addplayer";
+        }
+
+        //current.setHomeTeam(teamRepository.findById(current.getHomeTeam().getId()).get());
+        //current.setAwayTeam(teamRepository.findById(current.getAwayTeam().getId()).get());
+
+        //current.getHomeTeam().getHomeTeamMatches().add(current);
+        //current.getAwayTeam().getAwayTeamMatches().add(current);
+
+        repository.save(current);
+
+        model.addAttribute("teamsAll", teamRepository.findAll());
+        model.addAttribute("player", new Player());
+        model.addAttribute("message", "Match added!");
+        model.addAttribute("playersAll", repository.findAll());
+        return "players";
+    }
+
+    @GetMapping(value = "/addplayer")
+    String showPlayers(Model model) {
+        model.addAttribute("teamsAll", teamRepository.findAll());
+        model.addAttribute("player", new Player());
+        return "addplayer";
+    }
+
+    @GetMapping
+    String showAllPlayers(Model model) {
+        model.addAttribute("playersAll", repository.findAll());
+        return "players";
     }
 
     @GetMapping(value = "/players", params = {"!sort", "!page", "!size"})

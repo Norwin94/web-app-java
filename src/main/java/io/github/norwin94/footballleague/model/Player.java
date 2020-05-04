@@ -24,7 +24,7 @@ public class Player {
     //private Audit audit = new Audit();
     @ManyToOne
     @JoinColumn(name = "team_id", referencedColumnName = "id")
-    @JsonIgnoreProperties("players")
+    @JsonIgnoreProperties({"players", "awayTeamMatches", "homeTeamMatches"})
     private Team team;
 
 
