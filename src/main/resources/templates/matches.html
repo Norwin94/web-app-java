@@ -66,6 +66,9 @@
             <li class="nav-item active">
                 <a class="nav-link" href="">Matches <span class="sr-only">(current)</span></a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/goals">Goals</a>
+            </li>
         </ul>
         <a th:href="@{'/logout/'}">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Log out</button>
@@ -83,22 +86,21 @@
         <thead>
         <tr>
             <th> Date </th>
-            <th> Home  </th>
-            <th> Away  </th>
+            <th> Teams (Home - Away) </th>
             <th> Action  </th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="match : ${matchesAll}">
-                <td th:text="${#dates.format(match.matchDate, 'yyyy-MM-dd')}"></td>
-                <td th:text="${match.homeTeam.teamName}"></td>
-                <td th:text="${match.awayTeam.teamName}"></td>
-                <td>
-                    <a th:href="@{'/matches/' + ${match.id} + '/del'}">
-                        <button type="submit" name="deleteMatch" class="btn btn-danger" sec:authorize="hasRole('ADMIN')">Delete</button>
-                    </a>
-                    <button type="submit" name="editMatch" class="btn btn-warning">Edit</button>
-                </td>
+            <td th:text="${#dates.format(match.matchDate, 'yyyy-MM-dd')}"></td>
+            <td><a th:href="@{'/matches/' + ${match.id}}" th:text="${match.toString()}"/></td>
+            </a>
+            <td>
+                <a th:href="@{'/matches/' + ${match.id} + '/del'}">
+                    <button type="submit" name="deleteMatch" class="btn btn-danger" sec:authorize="hasRole('ADMIN')">Delete</button>
+                </a>
+                <button type="submit" name="editMatch" class="btn btn-warning">Edit</button>
+            </td>
         </tr>
         </tbody>
     </table>

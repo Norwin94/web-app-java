@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
 
-    <title>Football league: teams</title>
+    <title>Football league: matches</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/starter-template/">
 
@@ -41,12 +41,10 @@
         }
     </style>
 </head>
-
 <body>
-
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <a class="navbar-brand" href="#">
-            <img src="images/football.png" width="30" height="30" alt="Football ball ball..">
+        <img src="images/football.png" width="30" height="30" alt="Football ball ball..">
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -57,13 +55,13 @@
             <li class="nav-item">
                 <a class="nav-link" href="/#">Home </a>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="">Teams <span class="sr-only">(current)</span></a>
+            <li class="nav-item">
+                <a class="nav-link" href="/teams">Teams</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/players">Players</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" href="/matches">Matches</a>
             </li>
             <li class="nav-item">
@@ -76,47 +74,48 @@
     </div>
 </nav>
 
+
 <main>
-    <!--/*@thymesVar id="teamsAll" type="java.util.List<io.github.norwin94.footballleague.model.Team>"*/-->
-    <h1 th:if="${teamsAll.empty}">No teams</h1>
-    <br>
-    <br>
+    <!--/*@thymesVar id="team" type="java.lang.String"*/-->
+    <!--/*@thymesVar id="match" type="io.github.norwin94.footballleague.model.Match"*/-->
+    <!--/*@thymesVar id="goalsById" type="io.github.norwin94.footballleague.model.Goal"*/-->
+    <h1 th:text="${#dates.format(match.matchDate, 'yyyy-MM-dd')}"></h1>
+
+
     <table class="table table-sm table-hover table-bordered table-dark">
         <thead>
         <tr>
-            <th> Name    </th>
-            <th> Founded </th>
+            <th th:text="${match.homeTeam.teamName}"></th>
+            <th th:text="${match.awayTeam.teamName}"></th>
+            <th> Minute  </th>
             <th> Action  </th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="team : ${teamsAll}">
-                <td><a th:href="@{'/teams/' + ${team.id}}" th:text="${team.teamName}"/></td>
-                <td th:text="${#dates.format(team.founded, 'yyyy-MM-dd')}"></td>
-                <td>
-                    <a th:href="@{'/teams/' + ${team.id} + '/del'}">
-                        <button type="submit" name="deleteTeam" class="btn btn-danger" sec:authorize="hasRole('ADMIN')">Delete</button>
-                    </a>
-                    <button type="submit" name="editTeam" class="btn btn-warning">Edit</button>
-                </td>
+        <tr th:each="goal : ${goalsById}">
+            <td th:text="${goal.player.team.getId() == match.homeTeam.getId()} ? ${goal.player.getLastName()}"></td>
+            <td th:text="${goal.player.team.getId() == match.awayTeam.getId()} ? ${goal.player.getLastName()}"></td>
+            <td th:text="${goal.minute}"></td>
+            <td>
+                <a th:href="@{'/goals/' + ${goal.id} + '/del'}">
+                    <button type="submit" name="deleteMatch" class="btn btn-danger" sec:authorize="hasRole('ADMIN')">Delete</button>
+                </a>
+                <button type="submit" name="editMatch" class="btn btn-warning">Edit</button>
+            </td>
         </tr>
         </tbody>
     </table>
+
     <div class="text-center">
         <div>
-            <a th:href="@{'/teams/add'}">
-                <button type="submit" class="btn btn-primary">Add new Team</button>
+            <a th:href="@{'/goals/addgoal'}">
+                <button type="submit" class="btn btn-primary">Add new Goal</button>
             </a>
         </div>
     </div>
+
+
 </main>
 
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-<script src="../../assets/js/vendor/popper.min.js"></script>
-<script src="../../dist/js/bootstrap.min.js"></script>
 </body>
 </html>

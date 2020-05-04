@@ -34,6 +34,10 @@ public class Match {
         return homeTeam;
     }
 
+    public String toString() {
+        return this.getHomeTeam().getTeamName() + " - " + this.getAwayTeam().getTeamName();
+    }
+
     public void setHomeTeam(Team homeTeam) {
         this.homeTeam = homeTeam;
     }

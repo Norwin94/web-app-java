@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
 
-    <title>Football league: teams</title>
+    <title>Football league: goals</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/starter-template/">
 
@@ -57,8 +57,8 @@
             <li class="nav-item">
                 <a class="nav-link" href="/#">Home </a>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="">Teams <span class="sr-only">(current)</span></a>
+            <li class="nav-item">
+                <a class="nav-link" href="/teams">Teams</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/players">Players</a>
@@ -66,8 +66,8 @@
             <li class="nav-item">
                 <a class="nav-link" href="/matches">Matches</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/goals">Goals</a>
+            <li class="nav-item active">
+                <a class="nav-link" href="">Goals <span class="sr-only">(current)</span></a>
             </li>
         </ul>
         <a th:href="@{'/logout/'}">
@@ -77,35 +77,41 @@
 </nav>
 
 <main>
-    <!--/*@thymesVar id="teamsAll" type="java.util.List<io.github.norwin94.footballleague.model.Team>"*/-->
-    <h1 th:if="${teamsAll.empty}">No teams</h1>
+    <!--/*@thymesVar id="matchesAll" type="java.util.List<io.github.norwin94.footballleague.model.Match>"*/-->
+    <!--/*@thymesVar id="playersAll" type="java.util.List<io.github.norwin94.footballleague.model.Player>"*/-->
+    <!--/*@thymesVar id="goalsAll" type="java.util.List<io.github.norwin94.footballleague.model.Goal>"*/-->
+    <h1 th:if="${goalsAll.empty}">No goals</h1>
     <br>
     <br>
     <table class="table table-sm table-hover table-bordered table-dark">
         <thead>
         <tr>
-            <th> Name    </th>
-            <th> Founded </th>
+            <th> Player  </th>
+            <th> Match  </th>
+            <th> Date  </th>
+            <th> Minute </th>
             <th> Action  </th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="team : ${teamsAll}">
-                <td><a th:href="@{'/teams/' + ${team.id}}" th:text="${team.teamName}"/></td>
-                <td th:text="${#dates.format(team.founded, 'yyyy-MM-dd')}"></td>
-                <td>
-                    <a th:href="@{'/teams/' + ${team.id} + '/del'}">
-                        <button type="submit" name="deleteTeam" class="btn btn-danger" sec:authorize="hasRole('ADMIN')">Delete</button>
+        <tr th:each="goal : ${goalsAll}">
+            <td th:text="${goal.player.lastName}"></td>
+            <td th:text="${goal.match.toString()}"></td>
+            <td th:text="${#dates.format(goal.match.matchDate, 'yyyy-MM-dd')}"></td>
+            <td th:text="${goal.minute}"></td>
+            <td>
+                    <a th:href="@{'/goals/' + ${goal.id} + '/del'}">
+                        <button type="submit" name="deleteGoal" class="btn btn-danger" sec:authorize="hasRole('ADMIN')">Delete</button>
                     </a>
-                    <button type="submit" name="editTeam" class="btn btn-warning">Edit</button>
-                </td>
+                    <button type="submit" name="editGoal" class="btn btn-warning">Edit</button>
+            </td>
         </tr>
         </tbody>
     </table>
     <div class="text-center">
         <div>
-            <a th:href="@{'/teams/add'}">
-                <button type="submit" class="btn btn-primary">Add new Team</button>
+            <a th:href="@{'/goals/addgoal'}">
+                <button type="submit" class="btn btn-primary">Add new Goal</button>
             </a>
         </div>
     </div>

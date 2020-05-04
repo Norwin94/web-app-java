@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football League: matches</title>
+    <link rel="stylesheet" href="https://igoradamenko.github.io/awsm.css/css/awsm.min.css">
+    <style>
+        dt {
+            display: inline;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <!--/*@thymesVar id="message" type="java.lang.String"*/-->
+    <h1 th:if="${message != null}" th:text="${message}"></h1>
+    <!--/*@thymesVar id="goalsAll" type="java.util.List<io.github.norwin94.footballleague.model.Goal>"*/-->
+    <!--/*@thymesVar id="matchesAll" type="java.util.List<io.github.norwin94.footballleague.model.Match>"*/-->
+    <!--/*@thymesVar id="playersAll" type="java.util.List<io.github.norwin94.footballleague.model.Player>"*/-->
+    <form action="#" method="post" th:action="@{/goals/addgoal}" th:object="${goal}">
+        <p th:if="${#fields.hasAnyErrors()}" th:errors="*{all}"></p>
+        <fieldset>
+            <legend>New goal</legend>
+            <label>Match
+                <select th:field="${goal.match.id}">
+                    <option th:each="match : ${matchesAll}"
+                            th:value="${match.id}" th:text="${match.toString() + ' (' + match.matchDate + ')'}" th:field="${goal.match.id}">Match
+                    </option>
+                </select>
+            </label>
+            <label>Player
+                <select th:field="${goal.player.id}">
+                    <option th:each="player : ${playersAll}"
+                            th:value="${player.id}" th:text="${player.lastName + ' (' + player.team.teamName + ')'}" th:field="${goal.player.id}">Player
+                    </option>
+                </select>
+            </label>
+            <label>Minute
+                <input type="text" th:field="${goal.minute}"/>
+            </label>
+        </fieldset>
+        <p>
+            <button type="submit" name="addGoal">Add</button>
+        </p>
+    </form>
+</main>
+
+</body>
+</html>
