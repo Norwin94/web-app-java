@@ -60,12 +60,6 @@ public class GoalController {
             return "addgoal";
         }
 
-        //current.setHomeTeam(teamRepository.findById(current.getHomeTeam().getId()).get());
-        //current.setAwayTeam(teamRepository.findById(current.getAwayTeam().getId()).get());
-
-        //current.getHomeTeam().getHomeTeamMatches().add(current);
-        //current.getAwayTeam().getAwayTeamMatches().add(current);
-
         repository.save(current);
 
         model.addAttribute("playersAll", playerRepository.findAll());

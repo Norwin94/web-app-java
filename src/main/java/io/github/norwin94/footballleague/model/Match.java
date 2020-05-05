@@ -21,9 +21,11 @@ public class Match {
     @ManyToOne
     @JoinColumn(name = "home_team_id", referencedColumnName = "id")
     private Team homeTeam;
+    private int homeScore;
     @ManyToOne
     @JoinColumn(name = "away_team_id", referencedColumnName = "id")
     private Team awayTeam;
+    private int awayScore;
     private Date matchDate;
 
     public Match() {
@@ -31,11 +33,25 @@ public class Match {
     }
 
     public Team getHomeTeam() {
+
+/*
+
+        List<List<String>> addresses = new ArrayList<List<String>>();
+        addresses.get(0);
+
+        List<String[]> add = new ArrayList<String[]>();
+        add.
+*/
+
+
         return homeTeam;
     }
 
     public String toString() {
-        return this.getHomeTeam().getTeamName() + " - " + this.getAwayTeam().getTeamName();
+        return this.getHomeTeam().getTeamName() + "  ("
+                + this.getHomeScore() + " - "
+                + this.getAwayScore() + ")  "
+                + this.getAwayTeam().getTeamName();
     }
 
     public void setHomeTeam(Team homeTeam) {
@@ -65,6 +81,23 @@ public class Match {
 
     public void setMatchDate(Date matchDate) {
         this.matchDate = matchDate;
+    }
+
+
+    public int getHomeScore() {
+        return homeScore;
+    }
+
+    public void setHomeScore(int homeScore) {
+        this.homeScore = homeScore;
+    }
+
+    public int getAwayScore() {
+        return awayScore;
+    }
+
+    public void setAwayScore(int awayScore) {
+        this.awayScore = awayScore;
     }
 }
 

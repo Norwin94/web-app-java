@@ -47,19 +47,12 @@ public class PlayerController {
         if(bindingResult.hasErrors()) {
             return "addplayer";
         }
-
-        //current.setHomeTeam(teamRepository.findById(current.getHomeTeam().getId()).get());
-        //current.setAwayTeam(teamRepository.findById(current.getAwayTeam().getId()).get());
-
-        //current.getHomeTeam().getHomeTeamMatches().add(current);
-        //current.getAwayTeam().getAwayTeamMatches().add(current);
-
         repository.save(current);
 
-        model.addAttribute("teamsAll", teamRepository.findAll());
         model.addAttribute("player", new Player());
-        model.addAttribute("message", "Match added!");
         model.addAttribute("playersAll", repository.findAll());
+        model.addAttribute("teamsAll", teamRepository.findAll());
+        model.addAttribute("message", "Match added!");
         return "players";
     }
 

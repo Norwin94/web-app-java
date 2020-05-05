@@ -41,8 +41,7 @@ public class MatchController {
         Match match = repository.findById(id)
                 .orElseThrow(()-> new IllegalStateException("Not found this id"));
         model.addAttribute("match", match);
-        model.addAttribute("goalsById", goalRepository.findByMatchId(id));
-        model.addAttribute(goalsCountById,)
+        model.addAttribute("goalsByMatchId", goalRepository.findByMatchId(id));
         return "match";
     }
 
@@ -50,6 +49,14 @@ public class MatchController {
     String showAllMatches(Model model) {
         model.addAttribute("matchesAll", repository.findAll());
         return "matches";
+    }
+
+    @GetMapping(value = "/table")
+    String showAllMatchesTable(Model model) {
+        model.addAttribute("matchHomeTable", repository.getTableHome());
+        model.addAttribute("matchAwayTable", repository.getTableAway());
+        model.addAttribute("matchFullTable", repository.getFullTable());
+        return "table";
     }
 
     @GetMapping(value = "/addmatch")
@@ -67,13 +74,6 @@ public class MatchController {
         if(bindingResult.hasErrors()) {
             return "addmatch";
         }
-
-        //current.setHomeTeam(teamRepository.findById(current.getHomeTeam().getId()).get());
-        //current.setAwayTeam(teamRepository.findById(current.getAwayTeam().getId()).get());
-
-        //current.getHomeTeam().getHomeTeamMatches().add(current);
-        //current.getAwayTeam().getAwayTeamMatches().add(current);
-
         repository.save(current);
 
         model.addAttribute("teamsAll", teamRepository.findAll());

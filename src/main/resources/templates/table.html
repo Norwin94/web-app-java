@@ -57,8 +57,8 @@
             <li class="nav-item">
                 <a class="nav-link" href="/#">Home </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/matches/table">Table</a>
+            <li class="nav-item active">
+                <a class="nav-link" href="">Table <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/teams">Teams</a>
@@ -67,7 +67,7 @@
                 <a class="nav-link" href="/players">Players</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="">Matches <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="/matches">Matches</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/goals">Goals</a>
@@ -80,40 +80,87 @@
 </nav>
 
 <main>
+    <!--/*@thymesVar id="matchHomeTable" type="java.util.List<java.lang.Object>"*/-->
+    <!--/*@thymesVar id="matchAwayTable" type="java.util.List<java.lang.Object>"*/-->
+    <!--/*@thymesVar id="matchFullTable" type="java.util.List<java.lang.Object>"*/-->
     <!--/*@thymesVar id="matchesAll" type="java.util.List<io.github.norwin94.footballleague.model.Match>"*/-->
     <!--/*@thymesVar id="teamsAll" type="java.util.List<io.github.norwin94.footballleague.model.Team>"*/-->
-    <h1 th:if="${matchesAll.empty}">No matches</h1>
+    <h1 th:if="${matchHomeTable.empty}">No matches</h1>
     <br>
     <br>
     <table class="table table-sm table-hover table-bordered table-dark">
         <thead>
         <tr>
-            <th> Date </th>
-            <th> Teams (Home - Away) </th>
-            <th> Action  </th>
+            <th> Team </th>
+            <th> Matches </th>
+            <th> Points </th>
+            <th> Won </th>
+            <th> Draw </th>
+            <th> Lost </th>
+            <th> Scored </th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="match : ${matchesAll}">
-            <td th:text="${#dates.format(match.matchDate, 'yyyy-MM-dd')}"></td>
-            <td><a th:href="@{'/matches/' + ${match.id}}" th:text="${match.toString()}"/></td>
-            </a>
-            <td>
-                <a th:href="@{'/matches/' + ${match.id} + '/del'}">
-                    <button type="submit" name="deleteMatch" class="btn btn-danger" sec:authorize="hasRole('ADMIN')">Delete</button>
-                </a>
-                <button type="submit" name="editMatch" class="btn btn-warning">Edit</button>
-            </td>
+        <tr th:each="tables, stats : ${matchHomeTable}">
+            <td th:each="files, stat : ${tables}" th:text="${files}"></td>
         </tr>
         </tbody>
     </table>
+
+    <h1 th:if="${matchAwayTable.empty}">No matches</h1>
+    <br>
+    <br>
+    <table class="table table-sm table-hover table-bordered table-dark">
+        <thead>
+        <tr>
+            <th> Team </th>
+            <th> Matches </th>
+            <th> Points </th>
+            <th> Won </th>
+            <th> Draw </th>
+            <th> Lost </th>
+            <th> Scored </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="tables, stats : ${matchAwayTable}">
+            <td th:each="files, stat : ${tables}" th:text="${files}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h1 th:if="${matchFullTable.empty}">No matches</h1>
+    <br>
+    <br>
+    <table class="table table-sm table-hover table-bordered table-dark">
+        <thead>
+        <tr>
+            <th> Team </th>
+            <th> Matches </th>
+            <th> Points </th>
+            <th> Won </th>
+            <th> Draw </th>
+            <th> Lost </th>
+            <th> Scored </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="tables, stats : ${matchFullTable}">
+            <td th:each="files, stat : ${tables}" th:text="${files}"></td>
+        </tr>
+        </tbody>
+    </table>
+
     <div class="text-center">
         <div>
-            <a th:href="@{'/matches/addmatch'}">
-                <button type="submit" class="btn btn-primary">Add new Match</button>
+            <a th:href="@{'/matches/table'}">
+                <button type="submit" class="btn btn-primary">Full table</button>
+                <button type="submit" class="btn btn-primary">Home table</button>
+                <button type="submit" class="btn btn-primary">Away table</button>
             </a>
         </div>
     </div>
+
 </main>
 
 <!-- Bootstrap core JavaScript

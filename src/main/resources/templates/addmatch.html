@@ -29,12 +29,18 @@
                     </option>
                 </select>
             </label>
+            <label>Home score
+                <input type="number"  min="0" max="15" value="0" th:field="${match.homeScore}" />
+            </label>
             <label>Away team
                 <select th:field="${match.awayTeam.id}">
                 <option th:each="team : ${teamsAll}"
                             th:value="${team.id}" th:text="${team.teamName}" th:field="${match.awayTeam.id}">Team name
                     </option>
                 </select>
+            </label>
+            <label>Away score
+                <input type="number"  min="0" max="15" value="0" th:field="${match.awayScore}" />
             </label>
             <label>Match date
                 <input type="date"
