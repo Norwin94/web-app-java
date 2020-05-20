@@ -34,3 +34,29 @@ i piłkarzy.
 * backend: Java, Spring Boot, JPA,
 * database: H2,
 * authentication management: Keycloak.
+
+* Table points
+![2_points_table_sql_generated](/screenshots/2_points_table_sql_generated.png)
+
+* End points examples
+![3_end_points_examples](/screenshots/3_end_points_examples.png)
+
+* Add new team page
+![4_add_new_team_page](/screenshots/4_add_new_team_page.png)
+
+* Keycloak login
+![5_keycloak_login](/screenshots/5_keycloak_login.png)
+
+* 3D-Photo
+![6_3dphoto](/screenshots/6_3dphoto.png)
+
+* Model stadium
+![7_3dmodel_stadium](/screenshots/7_3dmodel_stadium.png)
+
+* Keycloak profile settings
+![8_keycloak_profile_settings](/screenshots/8_keycloak_profile_settings.png)
+
+* H2 database console
+![9_h2_database_console](/screenshots/9_h2_database_console.png)
+
+
