@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="template :: header"></head>
+
+<body>
+<div th:replace="template :: mainbar"></div>
+
+<main>
+    <!--/*@thymesVar id="team" type="io.github.norwin94.footballleague.model.Team"*/-->
+    <!--/*@thymesVar id="playersAll" type="java.util.List<io.github.norwin94.footballleague.model.Player>"*/-->
+    <form action="#" method="post" th:action="@{/teams/add}" th:object="${team}">
+        <p th:if="${#fields.hasAnyErrors()}" th:errors="*{all}"></p>
+        <fieldset>
+            <legend>New team</legend>
+            <hr />
+            <label for="teamName"> Team name </label>
+            <input type="text" id="teamName" th:field="*{teamName}"/>
+            <label for="founded"> Founded </label>
+            <input type="date" id="founded" min="1875-01-01" th:field="*{founded}"/>
+            <hr />
+            <fieldset th:each="player, stat: *{players}">
+                <legend th:text="|Players: ${stat.count}|"></legend>
+                <hr />
+                <label for="teamPlayerFirstName"> First name </label>
+                <input type="text" id="teamPlayerFirstName" th:field="*{players[__${stat.index}__].firstName}" />
+                <hr />
+                <label for="teamPlayerLastName"> Last name </label>
+                <input type="text" id="teamPlayerLastName" th:field="*{players[__${stat.index}__].lastName}" />
+                <hr />
+                <!--/*<label> Id </label>
+                <input type="text" th:field="*{players[__${stat.index}__].id}" />
+                <hr />
+                */-->
+                <label for="teamPlayerBirthDate"> Birth date </label>
+                <input type="date" id="teamPlayerBirthDate" min="1950-01-01" max="2010-01-01" th:field="*{players[__${stat.index}__].birthDate}"/>
+                <hr />
+            </fieldset>
+            <div>
+                <button type="submit" class="btn btn-warning" name="addPlayer"> Add Player to Team </button>
+            </div>
+        </fieldset>
+        <p>
+            <hr />
+            <hr />
+            <button type="submit" class="btn btn-primary" name="addTeam"> Add Team</button>
+        </p>
+    </form>
+</main>
+
+<div th:replace="template :: footscripts"></div>
+</body>
+</html>

@@ -1,83 +1,9 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
-
-    <title>Football league: matches</title>
-
-    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/starter-template/">
-
-    <!-- Bootstrap core CSS -->
-    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="starter-template.css" rel="stylesheet">
-    <style>
-        main {
-            width: 50%;
-            margin-left: auto;
-            margin-right: auto;
-            text-align: center;
-        }
-
-        body {
-            padding-top: 65px;
-            background-image: url('images/zidane.png');
-            background-position: 0 100px;
-            background-repeat: no-repeat;
-        }
-
-        a {
-          color: white;
-        }
-
-        a:hover {
-          color: green;
-          text-decoration: none;
-        }
-    </style>
-</head>
+<head th:replace="template :: header"></head>
 
 <body>
-
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="#">
-            <img src="images/football.png" width="30" height="30" alt="Football ball ball..">
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/#">Home </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/matches/table">Table</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/teams">Teams</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/players">Players</a>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="">Matches <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/goals">Goals</a>
-            </li>
-        </ul>
-        <a th:href="@{'/logout/'}">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Log out</button>
-        </a>
-    </div>
-</nav>
+<div th:replace="template :: mainbar"></div>
 
 <main>
     <!--/*@thymesVar id="matchesAll" type="java.util.List<io.github.norwin94.footballleague.model.Match>"*/-->
@@ -96,32 +22,30 @@
         <tbody>
         <tr th:each="match : ${matchesAll}">
             <td th:text="${#dates.format(match.matchDate, 'yyyy-MM-dd')}"></td>
-            <td><a th:href="@{'/matches/' + ${match.id}}" th:text="${match.toString()}"/></td>
-            </a>
+            <td th:text="${match.toString()}"></td>
             <td>
-                <a th:href="@{'/matches/' + ${match.id} + '/del'}">
-                    <button type="submit" name="deleteMatch" class="btn btn-danger" sec:authorize="hasRole('ADMIN')">Delete</button>
+                <a th:href="@{'/matches/' + ${match.getId()} + '/see'}">
+                    <button type="submit" name="seePlayer" class="btn btn-primary">See</button>
                 </a>
-                <button type="submit" name="editMatch" class="btn btn-warning">Edit</button>
+                <a th:href="@{'/matches/' + ${match.getId()} + '/edit'}">
+                    <button type="submit" name="editPlayer" class="btn btn-warning" sec:authorize="hasRole('USER')">Edit</button>
+                </a>
+                <a th:href="@{'/matches/' + ${match.getId()} + '/del'}">
+                    <button type="submit" name="deletePlayer" class="btn btn-danger" sec:authorize="hasRole('ADMIN')">Delete</button>
+                </a>
             </td>
         </tr>
         </tbody>
     </table>
     <div class="text-center">
         <div>
-            <a th:href="@{'/matches/addmatch'}">
-                <button type="submit" class="btn btn-primary">Add new Match</button>
+            <a th:href="@{'/matches/add'}">
+                <button type="submit" class="btn btn-primary" sec:authorize="hasRole('ADMIN')"> Add new Match </button>
             </a>
         </div>
     </div>
 </main>
 
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-<script src="../../assets/js/vendor/popper.min.js"></script>
-<script src="../../dist/js/bootstrap.min.js"></script>
+<div th:replace="template :: footscripts"></div>
 </body>
 </html>

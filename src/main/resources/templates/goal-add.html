@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="template :: header"></head>
+
+<body>
+<div th:replace="template :: mainbar"></div>
+
+<main>
+    <!--/*@thymesVar id="goal" type="io.github.norwin94.footballleague.model.Goal"*/-->
+    <!--/*@thymesVar id="match" type="io.github.norwin94.footballleague.model.Match>"*/-->
+    <!--/*@thymesVar id="playersHome" type="java.util.List<io.github.norwin94.footballleague.model.Player>"*/-->
+    <!--/*@thymesVar id="playersAway" type="java.util.List<io.github.norwin94.footballleague.model.Player>"*/-->
+    <form th:if="${modeType == 'add'}" action="#" method="post" th:action="@{/goals/add}" th:object="${goal}" >
+        <p th:if="${#fields.hasAnyErrors()}" th:errors="*{all}"></p>
+        <fieldset>
+            <legend>New goal</legend>
+            <label for="match">Match:
+                <select id="match" th:field="${goal.match.id}">
+                    <option th:value="${match.id}" th:text="${match.toString() + ' (' + match.matchDate + ')'}" th:field="${goal.match.id}">
+                    </option>
+                </select>
+            </label>
+            <hr />
+            <label for="playersHome" th:if="${playersHome != null}"> Player:
+                <select id="playersHome" th:field="${goal.player.id}">
+                    <option th:each="player : ${playersHome}"
+                            th:value="${player.id}" th:text="${player.lastName + ' (' + player.team.teamName + ')'}" th:field="${goal.player.id}">Player
+                    </option>
+                </select>
+            </label>
+            <label for="playersAway" th:if="${playersAway != null}"> Player:
+                <select id="playersAway" th:field="${goal.player.id}">
+                    <option th:each="player : ${playersAway}"
+                            th:value="${player.id}" th:text="${player.lastName + ' (' + player.team.teamName + ')'}" th:field="${goal.player.id}">Player
+                    </option>
+                </select>
+            </label>
+            <hr />
+            <label for="minute"> Minute:
+                <input type="text" id="minute" th:field="${goal.minute}"/>
+            </label>
+            <hr />
+            <hr />
+        </fieldset>
+        <p>
+            <button type="submit" name="addGoal" class="btn btn-primary"> Add goal </button>
+        </p>
+    </form>
+
+    <form th:if="${modeType == 'edit'}" action="#" method="post" th:action="@{'/goals/' + ${goal.id} + '/edit/'}" th:object="${goal}" >
+        <p th:if="${#fields.hasAnyErrors()}" th:errors="*{all}"></p>
+        <fieldset>
+            <legend>Edit goal</legend>
+            <label for="matchE">Match:
+                <select id="matchE" th:field="${goal.match.id}">
+                    <option th:value="${match.id}" th:text="${match.toString() + ' (' + match.matchDate + ')'}" th:field="${goal.match.id}">
+                    </option>
+                </select>
+            </label>
+            <hr />
+            <label for="playersHomeE" th:if="${playersHome != null}"> Player:
+                <select id="playersHomeE" th:field="${goal.player.id}">
+                    <option th:each="player : ${playersHome}"
+                            th:value="${player.id}" th:text="${player.lastName + ' (' + player.team.teamName + ')'}" th:field="${goal.player.id}">Player
+                    </option>
+                </select>
+            </label>
+            <label for="playersAwayE" th:if="${playersAway != null}"> Player:
+                <select id="playersAwayE" th:field="${goal.player.id}">
+                    <option th:each="player : ${playersAway}"
+                            th:value="${player.id}" th:text="${player.lastName + ' (' + player.team.teamName + ')'}" th:field="${goal.player.id}">Player
+                    </option>
+                </select>
+            </label>
+            <hr />
+            <label for="minuteE"> Minute:
+                <input type="text" id="minuteE" th:field="${goal.minute}"/>
+            </label>
+            <hr />
+            <hr />
+        </fieldset>
+        <p>
+            <button type="submit" name="addGoal" class="btn btn-primary"> Edit goal </button>
+        </p>
+    </form>
+
+    <form th:if="${modeType == 'editMatch'}" action="#" method="post" th:action="@{'/matches/' + ${match.id} + '/goals/' + ${goal.id} + '/edit'}" th:object="${goal}" sec:authorize="hasRole('USER')">
+        <p th:if="${#fields.hasAnyErrors()}" th:errors="*{all}"></p>
+        <fieldset>
+            <legend>Edit goal</legend>
+            <label for="matchEdit">Match:
+                <select id="matchEdit" th:field="${goal.match.id}">
+                    <option th:value="${match.id}" th:text="${match.toString() + ' (' + match.matchDate + ')'}" th:field="${goal.match.id}">
+                    </option>
+                </select>
+            </label>
+            <hr />
+            <label for="playersHomeEdit"> Player:
+                <select id="playersHomeEdit" th:field="${goal.player.id}">
+                    <option th:each="player : ${players}"
+                            th:value="${player.id}" th:text="${player.lastName + ' (' + player.team.teamName + ')'}" th:field="${goal.player.id}">Player
+                    </option>
+                </select>
+            </label>
+            <hr />
+            <label for="minuteEdit"> Minute:
+                <input type="text" value="${goal.getMinute()}" id="minuteEdit" th:field="${goal.minute}"/>
+            </label>
+            <hr />
+            <hr />
+        </fieldset>
+        <p>
+            <button type="submit" name="editGoalU" class="btn btn-primary" > Edit goal </button>
+        </p>
+    </form>
+</main>
+
+<div th:replace="template :: footscripts"></div>
+
+</body>
+</html>

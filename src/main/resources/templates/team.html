@@ -1,60 +1,70 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Football League: team</title>
-    <link rel="stylesheet" href="https://igoradamenko.github.io/awsm.css/css/awsm.min.css">
-    <style>
-        dt {
-            display: inline;
-            padding: 20px;
-        }
-    </style>
-</head>
+
+<head th:replace="template :: header"></head>
+
 <body>
+<div th:replace="template :: mainbar"></div>
+
 <main>
     <!--/*@thymesVar id="team" type="java.lang.String"*/-->
-    <!--/*@thymesVar id="playersAll" type="io.github.norwin94.footballleague.model.Player"*/-->
-    <dt th:text="${team.teamName}"></dt>
-    <dt th:text="${#dates.format(team.founded, 'yyyy-MM-dd')}"></dt>
-
-    <dl th:each="player : ${team.players}">
-        <a th:href="@{'/players/' + ${player.id}}">
-            <dt th:text="${player.firstName}"></dt>
-            <dt th:text="${player.lastName}"></dt>
-            <dt th:text="${#dates.format(player.birthDate, 'yyyy-MM-dd')}"></dt>
-        </a>
-    </dl>
-
-    <form action="#" th:action="@{'/teams/' + ${team.id}}" th:object="${team}" method="post">
-        <p>Team name
-            <input type="text" th:field="*{teamName}" th:text="*{teamName}" />
-        </p>
-        <p>Date found
-            <input type="date" min="1875-01-01" th:field="*{founded}" th:text="*{founded}" />
-        </p>
-        <p>
-            <button type="submit" name="editTeam">Edit Team</button>
-        </p>
+    <form th:if="${modeType == 'edit'}" action="#" th:action="@{'/teams/' + ${team.id} + '/edit'}" th:object="${team}" method="post">
+        <h1 class="text-center">
+            <hr />
+            <input type="text" th:field="*{teamName}"/>
+            <hr />
+            <input type="date" min="1875-01-01" th:field="*{founded}"/>
+            <hr />
+        </h1>
+        <div class="text-center">
+            <div>
+                <button type="submit" name="editTeam" class="btn btn-primary">Edit team</button>
+            </div>
+        </div>
     </form>
 
-    <form action="#" th:action="@{'/teams/' + ${team.id}}" th:object="${team}" method="post">
-        <label>Add existing player
-            <select>
-                <option th:each="player : ${playersAll}"
-                        th:value="${player.id}"
-                        th:text="${player.lastName}"
-                        > Existing player
-                </option>
-            </select>
-            <p>
-                <button type="submit" name="addExistingPlayer">Add existing player</button>
-            </p>
-        </label>
-    </form>
+    <div th:if="${modeType == 'see'}">
+        <hr />
+        <h1 th:text="${team.teamName}"></h1>
+        <hr />
+        <h1 th:text="${#dates.format(team.founded, 'yyyy-MM-dd')}"></h1>
+        <hr />
+        <table class="table table-sm table-hover table-bordered table-dark">
+            <caption>Players</caption>
+            <thead>
+            <tr>
+                <th> First name </th>
+                <th> Last name </th>
+                <th> Birth date </th>
+                <th> Action </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="player : ${team.getPlayers()}">
+                <td th:text="${player.getFirstName()}"/></td>
+                <td th:text="${player.getLastName()}"/></td>
+                <td th:text="${#dates.format(player.getBirthDate(), 'yyyy-MM-dd')}"/></td>
+                <td>
+                    <a th:href="@{'/players/' + ${player.getId()} + '/see'}">
+                        <button type="submit" name="seePlayer" class="btn btn-primary">See</button>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <hr />
+        <div class="text-center">
+            <a th:href="@{'/teams/' + ${team.id} + '/edit'}">
+                    <button type="submit" name="editTeam" class="btn btn-warning" sec:authorize="hasRole('USER')">Edit team</button>
+            </a>
+            <a th:href="@{'/teams/' + ${team.id} + '/del'}">
+                <button type="submit" name="deleteTeam" class="btn btn-danger" sec:authorize="hasRole('ADMIN')">Delete</button>
+            </a>
+        </div>
+    </div>
 
 </main>
 
+<div th:replace="template :: footscripts"></div>
 </body>
 </html>

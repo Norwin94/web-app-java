@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football league: players</title>
+    <link rel="stylesheet" href="https://igoradamenko.github.io/awsm.css/css/awsm.min.css">
+    <style>
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+    .buttonBack {
+        position: absolute;
+        display: block;
+        z-index: 99;
+        left: 5%;
+        top: 5%;
+    }
+</style>
+</head>
+<body>
+<input type="button" class="buttonBack" value="Go back" onclick="history.back()">
+<script type="module">
+import * as THREE from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/build/three.module.js';
+import {OrbitControls} from 'https://threejsfundamentals.org/threejs/resources/threejs/r115/examples/jsm/controls/OrbitControls.js';
+
+            var container;
+
+			var camera, scene, renderer;
+
+			var pointLight;
+
+			init();
+			animate();
+
+			function init() {
+
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 5000 );
+				camera.position.z = 2000;
+
+				//cubemap
+				var path = 'http://localhost:8080/images/';
+				var format = '.jpg';
+				var urls = [
+					path + 'px' + format, path + 'nx' + format,
+					path + 'py' + format, path + 'ny' + format,
+					path + 'pz' + format, path + 'nz' + format
+				];
+
+				var reflectionCube = new THREE.CubeTextureLoader().load( urls );
+				var refractionCube = new THREE.CubeTextureLoader().load( urls );
+				refractionCube.mapping = THREE.CubeRefractionMapping;
+
+				scene = new THREE.Scene();
+				scene.background = reflectionCube;
+
+				//renderer
+				renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				container.appendChild( renderer.domElement );
+
+				//controls
+				var controls = new OrbitControls( camera, renderer.domElement );
+				controls.enableZoom = false;
+				controls.enablePan = false;
+				controls.minPolarAngle = Math.PI / 4;
+				controls.maxPolarAngle = Math.PI / 1.5;
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+				render();
+
+			}
+
+			function render() {
+
+				renderer.render( scene, camera );
+
+			}
+</script>
+</body>
+</html>

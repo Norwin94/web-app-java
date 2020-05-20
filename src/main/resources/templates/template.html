@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<!--/*@thymesVar id="actualPage" type="java.lang.String"*/-->
+<!--/*@thymesVar id="modeType" type="java.lang.String"*/-->
+<h1 ></h1>
+<head th:fragment="header">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title> Football league </title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/starter-template/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <!--<link href="starter-template.css" rel="stylesheet">-->
+    <link th:href ="@{/css/styles.css}" rel="stylesheet" />
+</head>
+
+<body>
+<div th:fragment="mainbar">
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#">
+            <img src="http://localhost:8080/images/football.png" width="30" height="30" alt="Ball">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/#">Home </a>
+            </li>
+            <li class="nav-item" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/matches/table') ? 'active':''}">
+                <a class="nav-link" th:href="@{/matches/table/all}">Table</a>
+            </li>
+            <li class="nav-item" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/teams') ? 'active':''}">
+                <a class="nav-link" th:href="@{/teams}">Teams</a>
+            </li>
+            <li class="nav-item" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/players') ? 'active':''}">
+                <a class="nav-link" th:href="@{/players}">Players</a>
+            </li>
+            <li class="nav-item" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/matches') ? 'active':''}">
+                <a class="nav-link" th:href="@{/matches}">Matches</a>
+            </li>
+            <li class="nav-item" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/goals') ? 'active':''}">
+                <a class="nav-link" th:href="@{/goals}">Goals</a>
+            </li>
+            <li class="nav-item" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/3d_photo') ? 'active':''}">
+                <a class="nav-link" th:href="@{/3d_photo.html}">3D Photo</a>
+            </li>
+            <li class="nav-item" th:classappend="${#httpServletRequest.getRequestURI().startsWith('/sansiro') ? 'active':''}">
+                <a class="nav-link" th:href="@{/sansiro.html}"> San Siro Model </a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('USER')">
+                <a class="nav-link" href="http://localhost:8180/auth/realms/FootballLeague/account/" target="_blank" style="color:yellowgreen;"> #Profile settings </a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                <a class="nav-link" th:href="@{/console}" style="color:yellowgreen;"> #Database </a>
+            </li>
+            <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                <a class="nav-link" href="http://localhost:8180/auth/admin" target="_blank" style="color:yellowgreen;"> #Authentication management </a>
+            </li>
+        </ul>
+        <a th:href="@{'/logout/'}" sec:authorize="hasRole('USER')">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Log out</button>
+        </a>
+        <a th:href="@{'/sso/login'}" sec:authorize="!hasRole('USER')">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Log in</button>
+        </a>
+    </div>
+</nav>
+    <div class="text-center">
+        <!--/*@thymesVar id="messageGood" type="java.lang.String"*/-->
+        <h3 id="messagesGood" th:if="${messageGood != null}" th:text="${messageGood}"></h3>
+        <!--/*@thymesVar id="messageBad" type="java.lang.String"*/-->
+        <h3 id="messagesBad" th:if="${messageBad != null}" th:text="${messageBad}"></h3>
+    </div>
+</div>
+
+<main>
+    <!--/*@thymesVar id="playersAll" type="java.util.List<io.github.norwin94.footballleague.model.Player>"*/-->
+    <h1 th:if="${playersAll.empty}">No players</h1>
+    <br>
+    <br>
+    <table class="table table-sm table-hover table-bordered table-dark">
+        <thead>
+        <tr>
+            <th> First name </th>
+            <th> Last name  </th>
+            <th> Birth      </th>
+            <th> Team       </th>
+            <th> Action     </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="player : ${playersAll}">
+            <td th:text="${player.getFirstName()}"></td>
+            <td th:text="${player.getLastName()}"></td>
+            <td th:text="${#dates.format(player.getBirthDate(), 'yyyy-MM-dd')}"></td>
+            <td><a th:href="${player.team != null} ? @{'/teams/' + ${player.getTeam().getId()}}" th:text="${player.team != null} ? ${player.getTeam().getTeamName()}"/></td>
+            <td>
+                <a th:href="@{'/players/' + ${player.getId()} + '/del'}">
+                    <button type="submit" name="deletePlayer" class="btn btn-danger" sec:authorize="hasRole('ADMIN')">Delete</button>
+                </a>
+                <a th:href="@{'/players/' + ${player.getId()} + '/edit'}">
+                    <button type="submit" name="editPlayer" class="btn btn-warning" sec:authorize="hasRole('USER')">Edit</button>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="text-center">
+        <div>
+            <a th:href="@{'/players/addplayer'}">
+                <button type="submit" class="btn btn-primary">Add new Player</button>
+            </a>
+        </div>
+    </div>
+</main>
+
+<div th:fragment="footscripts">
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="../../assets/js/vendor/popper.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+</div>
+</body>
+</html>

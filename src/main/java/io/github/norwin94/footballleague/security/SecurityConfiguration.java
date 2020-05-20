@@ -45,8 +45,5 @@ public class SecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter 
                 .antMatchers("/console/**").permitAll();
         http.csrf().disable();
         http.headers().frameOptions().disable();
-
-                //.anyRequest()
-               // .permitAll();
     }
 }

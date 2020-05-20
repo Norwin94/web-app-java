@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="template :: header"></head>
+
+<body>
+<div th:replace="template :: mainbar"></div>
+
+<main>
+    <!--/*@thymesVar id="match" type="io.github.norwin94.footballleague.model.Match"*/-->
+    <!--/*@thymesVar id="teamsAll" type="java.util.List<io.github.norwin94.footballleague.model.Team>"*/-->
+    <!--/*@thymesVar id="teamHome" type="io.github.norwin94.footballleague.model.Team"*/-->
+    <!--/*@thymesVar id="teamAway" type="io.github.norwin94.footballleague.model.Team"*/-->
+    <form th:if="${modeType == 'add'}" action="#" method="post" th:action="@{/matches/add}" th:object="${match}">
+        <p th:if="${#fields.hasAnyErrors()}" th:errors="*{all}"></p>
+        <fieldset>
+            <legend> New match </legend>
+            <hr />
+            <label> Home team:
+                <select th:field="${match.homeTeam.id}">
+                    <option th:each="team : ${teamsAll}"
+                            th:value="${team.id}" th:text="${team.teamName}" th:field="${match.homeTeam.id}">Team name
+                    </option>
+                </select>
+            </label>
+            <label> Home score:
+                <input type="number"  min="0" max="15" value="0" th:field="${match.homeScore}" />
+            </label>
+            <hr />
+            <label> Away team:
+                <select th:field="${match.awayTeam.id}">
+                <option th:each="team : ${teamsAll}"
+                            th:value="${team.id}" th:text="${team.teamName}" th:field="${match.awayTeam.id}">Team name
+                    </option>
+                </select>
+            </label>
+            <label> Away score:
+                <input type="number"  min="0" max="15" value="0" th:field="${match.awayScore}" />
+            </label>
+            <hr />
+            <label> Match date:
+                <input type="date"
+                       max="2020-05-01"
+                       th:field="${match.matchDate}"/>
+            </label>
+            <hr />
+            <hr />
+        </fieldset>
+        <p>
+            <button type="submit" class="btn btn-primary" name="addMatch"> Add Match </button>
+        </p>
+    </form>
+
+    <form th:if="${modeType == 'edit'}" action="#" method="post" th:action="@{'/matches/' + ${match.id} + '/edit'}" th:object="${match}">
+        <p th:if="${#fields.hasAnyErrors()}" th:errors="*{all}"></p>
+        <fieldset>
+            <legend> Edit match </legend>
+            <hr />
+            <label> Home team:
+                <select th:field="${match.homeTeam.id}">
+                    <option th:value="${teamHome.id}" th:text="${match.getHomeTeam().getTeamName()}" th:field="${match.homeTeam.id}">Team name
+                    </option>
+                </select>
+            </label>
+            <label> Home score:
+                <input type="number"  min="0" max="15" th:value="${match.getHomeScore()}" th:field="${match.homeScore}" />
+            </label>
+            <hr />
+            <label> Away team:
+                <select th:field="${match.awayTeam.id}">
+                    <option th:value="${teamAway.id}" th:text="${match.getAwayTeam().getTeamName()}" th:field="${match.awayTeam.id}">Team name
+                    </option>
+                </select>
+            </label>
+            <label> Away score:
+                <input type="number"  min="0" max="15" th:value="${match.getHomeScore()}" th:field="${match.awayScore}" />
+            </label>
+            <hr />
+            <label> Match date:
+                <input type="date" max="2020-05-01" th:field="${match.matchDate}" th:value="${match.getMatchDate()}"/>
+            </label>
+            <hr />
+            <hr />
+        </fieldset>
+        <p>
+            <button type="submit" class="btn btn-primary" name="editMatch"> Edit Match </button>
+        </p>
+    </form>
+
+</main>
+
+<div th:replace="template :: footscripts"></div>
+</body>
+</html>

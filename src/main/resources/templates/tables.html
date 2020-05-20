@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="template :: header"></head>
+
+<body>
+<div th:replace="template :: mainbar"></div>
+
+<main>
+    <!--/*@thymesVar id="matchFullTable" type="java.util.List<java.lang.Object>"*/-->
+    <!--/*@thymesVar id="matchesAll" type="java.util.List<io.github.norwin94.footballleague.model.Match>"*/-->
+    <!--/*@thymesVar id="teamsAll" type="java.util.List<io.github.norwin94.footballleague.model.Team>"*/-->
+        <h1 th:if="${matchFullTable.empty}">No matches</h1>
+        <br>
+        <br>
+        <table class="table table-sm table-hover table-bordered table-dark">
+            <thead>
+            <tr>
+                <th> Team </th>
+                <th> Matches </th>
+                <th> Points </th>
+                <th> Won </th>
+                <th> Draw </th>
+                <th> Lost </th>
+                <th> Scored </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr  th:each="tables, stats : ${matchFullTable}">
+                <td th:each="files, stat : ${tables}" th:text="${files}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <div>
+                <a th:href="@{'/matches/table/home'}">
+                    <button type="submit" class="btn btn-primary" th:style="${modeType == 'home'} ? 'background-color:green'"> Home </button>
+                </a>
+                <a th:href="@{'/matches/table/all'}">
+                    <button type="submit" class="btn btn-primary" th:style="${modeType == 'all'} ? 'background-color:green'"> Full Match table </button>
+                </a>
+                <a th:href="@{'/matches/table/away'}">
+                    <button type="submit" class="btn btn-primary" th:style="${modeType == 'away'} ? 'background-color:green'"> Away </button>
+                </a>
+            </div>
+        </div>
+
+</main>
+
+<div th:replace="template :: footscripts"></div>
+</body>
+</html>

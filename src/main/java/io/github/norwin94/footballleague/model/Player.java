@@ -27,9 +27,13 @@ public class Player {
     @JsonIgnoreProperties({"players", "awayTeamMatches", "homeTeamMatches"})
     private Team team;
 
-
     public Player() {
+    }
 
+    public String toString() {
+        return this.getFirstName() + " "
+                + this.getLastName() + " ("
+                + this.getBirthDate().toString() + ")";
     }
 
     public int getId() {

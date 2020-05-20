@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="template :: header"></head>
+
+<body>
+<div th:replace="template :: mainbar"></div>
+
+<main>
+    <!--/*@thymesVar id="player" type="io.github.norwin94.footballleague.model.Player"*/-->
+    <!--/*@thymesVar id="teamsAll" type="java.util.List<io.github.norwin94.footballleague.model.Team>"*/-->
+    <form action="#" method="post" th:action="@{/players/add}" th:object="${player}">
+        <p th:if="${#fields.hasAnyErrors()}" th:errors="*{all}"></p>
+        <fieldset>
+            <legend>New player</legend>
+            <label for="firstName"> First name </label>
+            <input type="text" id="firstName" th:field="${player.firstName}" />
+            <hr />
+            <label for="lastName"> Last name </label>
+            <input type="text" id="lastName" th:field="${player.lastName}" />
+            <hr />
+            <label for="birthDate"> Birth date </label>
+            <input type="date" min="1950-01-01" id="birthDate" th:field="${player.birthDate}"/>
+            <hr />
+            <label for="teamName"> Team </label>
+            <select id="teamName" th:field="${player.team.id}">
+                <option th:each="team : ${teamsAll}"
+                        th:value="${team.id}" th:text="${team.teamName}" th:field="${player.team.id}">Team name
+                </option>
+            </select>
+        </fieldset>
+        <p>
+            <hr />
+            <hr />
+            <button type="submit" class="btn btn-primary" name="addPlayer"> Add Player</button>
+        </p>
+    </form>
+</main>
+
+<div th:replace="template :: footscripts"></div>
+</body>
+</html>

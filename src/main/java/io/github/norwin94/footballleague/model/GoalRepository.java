@@ -11,9 +11,17 @@ import java.util.Optional;
 public interface GoalRepository {
     List<Goal> findAll();
 
-    List<Goal> findByMatchId(Integer i);
+    //List<Goal> findAllOrderByMatch_IdAscMinuteAsc();
 
-    Long countByMatchId(Integer i);
+    List<Goal> findAllByMatch_Id(Integer matchId);
+
+    List<Goal> findAllByPlayer_IdOrderByMatch_IdAscMinuteAsc(Integer matchId);
+
+    List<Goal> findByMatchIdOrderByMinuteAsc(Integer i);
+
+    Long countByMatch_Id(Integer i);
+
+    Long countByPlayer_Id(Integer i);
 
     Page<Goal> findAll(Pageable page);
 

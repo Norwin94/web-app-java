@@ -1,0 +1,42 @@
+.starter-template {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    background-color: #97eb99;
+}
+
+main {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+body {
+    padding-top: 65px;
+    background-image: url('http://localhost:8080/images/zidane.png');
+    background-position: 0 100px;
+    background-repeat: no-repeat;
+}
+
+a {
+  color: white;
+}
+
+a:hover {
+  color: green;
+  text-decoration: none;
+}
+
+input {
+    text-align: center;
+}
+
+#messagesBad {
+    color: red;
+}
+
+#messagesGood {
+    color: green;
+}

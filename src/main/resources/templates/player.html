@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="template :: header"></head>
+
+<body>
+<div th:replace="template :: mainbar"></div>
+
+<main>
+    <!--/*@thymesVar id="goals" type="java.util.List<io.github.norwin94.footballleague.model.Goal>"*/-->
+    <!--/*@thymesVar id="teamsAll" type="java.util.List<io.github.norwin94.footballleague.model.Team>"*/-->
+    <!--/*@thymesVar id="player" type="java.lang.String"*/-->
+    <form th:if="${modeType == 'edit'}" action="#" th:action="@{'/players/' + ${player.id} + '/edit'}" th:object="${player}" method="post">
+        <fieldset>
+            <legend>Player:</legend>
+            <hr />
+            <label for="firstName">First name:</label>
+            <input type="text" th:field="*{firstName}" id="firstName"/>
+            <hr />
+            <label for="lastName">Last name:</label>
+            <input type="text" th:field="*{lastName}" id="lastName"/>
+            <hr />
+            <label for="birthDate">Birth date:</label>
+            <input type="date" min="1950-01-01" th:field="*{birthDate}" id="birthDate"/>
+            <hr />
+            <label>Team: </label>
+            <select th:field="${player.team.id}">
+                <option th:each="team : ${teamsAll}"
+                        th:value="${team.id}" th:text="${team.teamName}" th:field="${player.team.id}">
+                </option>
+            </select>
+            <hr />
+            <button type="submit" name="editPlayer" class="btn btn-primary">Edit player</button>
+        </fieldset>
+    </form>
+
+    <div th:if="${modeType == 'see'}">
+        <fieldset>
+            <legend>Player:</legend>
+            <label for="firstNameSee">First name:</label>
+            <label id="firstNameSee" th:text="${player.getFirstName()}"></label>
+            <hr />
+            <label for="lastNameSee">Last name:</label>
+            <label id="lastNameSee" th:text="${player.getLastName()}"></label>
+            <hr />
+            <label for="birthDateSee">Birth date:</label>
+            <label id="birthDateSee" th:text="${player.getBirthDate().toString()}"></label>
+            <hr />
+            <label>Team: </label>
+            <label th:text="${player.team != null} ? ${player.getTeam().getTeamName()}"></label>
+            <hr />
+        </fieldset>
+        <div class="text-center">
+            <a th:href="@{'/players/' + ${player.id} + '/edit'}" sec:authorize="hasRole('USER')">
+                    <button type="submit" name="editPlayer" class="btn btn-warning"> Edit player </button>
+            </a>
+            <a th:href="@{'/players/' + ${player.getId()} + '/del'}" sec:authorize="hasRole('ADMIN')">
+                <button type="submit" name="deletePLayer" class="btn btn-danger"> Delete </button>
+            </a>
+        </div>
+
+        <br>
+        <h2> Goals: </h2>
+        <table class="table table-sm table-hover table-bordered table-dark">
+            <thead>
+            <tr>
+                <th> Match  </th>
+                <th> Date  </th>
+                <th> Minute </th>
+                <th> Action  </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="goal : ${goals}">
+                <td th:text="${goal.match.toString()}"></td>
+                <td th:text="${#dates.format(goal.match.matchDate, 'yyyy-MM-dd')}"></td>
+                <td th:text="${goal.minute}"></td>
+                <td>
+                    <a th:href="@{'/matches/' + ${goal.getMatch().getId()} + '/see'}">
+                        <button type="submit" name="seeMatch" class="btn btn-primary" > See </button>
+                    </a>
+                    <a th:href="@{'/goals/' + ${goal.id} + '/del'}">
+                        <button type="submit" name="deleteGoal" class="btn btn-danger" sec:authorize="hasRole('ADMIN')">Delete</button>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</main>
+
+<div th:replace="template :: footscripts"></div>
+</body>
+</html>

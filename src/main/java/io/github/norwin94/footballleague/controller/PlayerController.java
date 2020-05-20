@@ -11,62 +11,155 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Controller
-//@Secured("ROLE_USER")
 @RequestMapping("/players")
 public class PlayerController {
     private static final Logger logger = LoggerFactory.getLogger(PlayerController.class);
     private final PlayerRepository repository;
+    private final GoalRepository goalRepository;
     private final TeamRepository teamRepository;
     private final PlayerService service;
 
-    PlayerController(final PlayerRepository repository, TeamRepository teamRepository, PlayerService service) {
+    PlayerController(final PlayerRepository repository, GoalRepository goalRepository, TeamRepository teamRepository, PlayerService service) {
         this.repository = repository;
+        this.goalRepository = goalRepository;
         this.teamRepository = teamRepository;
         this.service = service;
     }
 
+    //POST ADD
     @Secured("ROLE_ADMIN")
-    @GetMapping(value = "/{id}/del")
-    String deleteMatch(@PathVariable Integer id, Model model) {
-        repository.deleteById(id);
-        model.addAttribute("playersAll", repository.findAll());
-        return "players";
-    }
-
-    @PostMapping(params = "addPlayer", value = "/addplayer")
+    @PostMapping(params = "addPlayer", value = "/add")
     String addTeam(@ModelAttribute("player") @Valid Player current,
                    BindingResult bindingResult,
-                   Model model
+                   Model model,
+                   RedirectAttributes redirectAttributes
     ) {
         if(bindingResult.hasErrors()) {
-            return "addplayer";
+            return "player-add";
         }
         repository.save(current);
 
-        model.addAttribute("player", new Player());
+        redirectAttributes.addFlashAttribute("message", "Player added!");
         model.addAttribute("playersAll", repository.findAll());
-        model.addAttribute("teamsAll", teamRepository.findAll());
-        model.addAttribute("message", "Match added!");
-        return "players";
+        return "redirect:/players";
     }
 
-    @GetMapping(value = "/addplayer")
+    //POST DELETE
+    @Secured("ROLE_ADMIN")
+    @GetMapping(value = "/{id}/del")
+    String deleteMatch(@PathVariable Integer id,
+                       Model model,
+                       RedirectAttributes redirectAttributes
+    ) {
+        Player player = repository.findById(id)
+                .orElseThrow(()-> new IllegalStateException("Not found this id"));
+
+        repository.deleteById(player.getId());
+        redirectAttributes.addFlashAttribute("message", "Player deleted!");
+        model.addAttribute("playersAll", repository.findAll());
+        return "redirect:/players";
+    }
+
+    //POST EDIT
+    @Secured("ROLE_USER")
+    @PostMapping(params = "editPlayer", value = "/{id}/edit")
+    String editPlayer(@ModelAttribute("player") @Valid Player toUpdate,
+                      BindingResult bindingResult,
+                      Model model,
+                      @PathVariable Integer id,
+                      RedirectAttributes redirectAttributes
+    ) {
+        repository.save(toUpdate);
+        redirectAttributes.addFlashAttribute("messageGood", "Player edited!");
+        model.addAttribute("playersAll", repository.findAll());
+        return "redirect:/players";
+    }
+
+    //GET ADD
+    @Secured("ROLE_ADMIN")
+    @GetMapping(value = "/add")
     String showPlayers(Model model) {
         model.addAttribute("teamsAll", teamRepository.findAll());
         model.addAttribute("player", new Player());
-        return "addplayer";
+        return "player-add";
     }
 
+    //GET EDIT
+    @Secured("ROLE_USER")
+    @GetMapping(value = "/{id}/edit")
+    String showPlayerToEdit(Model model, @PathVariable int id) {
+        Player player = repository.findById(id)
+                .orElseThrow(()-> new IllegalStateException("Not found this id"));
+
+        model.addAttribute("player", player);
+        model.addAttribute("teamsAll", teamRepository.findAll());
+        model.addAttribute("actualPage", "players");
+        model.addAttribute("modeType", "edit");
+        return "player";
+    }
+
+    //GET SEE ONE
+    @GetMapping(value = "/{id}/see")
+    String showPlayer(Model model, @PathVariable int id) {
+        Player player = repository.findById(id)
+                .orElseThrow(()-> new IllegalStateException("Not found this id"));
+        List<Goal> goals = goalRepository.findAllByPlayer_IdOrderByMatch_IdAscMinuteAsc(id);
+
+        model.addAttribute("player", player);
+        model.addAttribute("goals", goals);
+        model.addAttribute("teamsAll", teamRepository.findAll());
+        model.addAttribute("actualPage", "players");
+        model.addAttribute("modeType", "see");
+        return "player";
+    }
+
+    //GET ALL
     @GetMapping
     String showAllPlayers(Model model) {
         model.addAttribute("playersAll", repository.findAll());
+        model.addAttribute("actualPage", "players");
         return "players";
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //nie dziala, gdy teamName is null, bo teamName w Team ma @NotBlank
+    //@Transactional tutaj dodal, rollbackuje gdy nie przejdzie cale
+    @PatchMapping("/players/{id}")
+    ResponseEntity<?> changePlayerName(@PathVariable int id, @RequestBody @Valid Player partialUpdates) {
+        if(!repository.existsById(id)){
+            return ResponseEntity.notFound().build();
+        }
+        Player player = repository.findById(id).get();
+        if(!partialUpdates.getFirstName().isEmpty()) {
+            player.setFirstName(partialUpdates.getFirstName());
+        }
+        if(partialUpdates.getBirthDate() != null) {
+            player.setBirthDate(partialUpdates.getBirthDate());
+        }
+        repository.save(player);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/players/{id}")
+    ResponseEntity<?> updatePlayer(@PathVariable int id, @RequestBody @Valid Player toUpdate) {
+        if(!repository.existsById(id)){
+            return ResponseEntity.notFound().build();
+        }
+        repository.findById(id)
+                .ifPresent(team -> {
+                    team.updateFrom(toUpdate);
+                    repository.save(team);
+                });
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping(value = "/players", params = {"!sort", "!page", "!size"})
@@ -95,35 +188,4 @@ public class PlayerController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/players/{id}")
-    ResponseEntity<?> updatePlayer(@PathVariable int id, @RequestBody @Valid Player toUpdate) {
-        if(!repository.existsById(id)){
-            return ResponseEntity.notFound().build();
-        }
-        repository.findById(id)
-                .ifPresent(team -> {
-                    team.updateFrom(toUpdate);
-                    repository.save(team);
-                });
-        return ResponseEntity.noContent().build();
-    }
-
-    //nie dziala, gdy teamName is null, bo teamName w Team ma @NotBlank
-    //@Transactional tutaj dodal, rollbackuje gdy nie przejdzie cale
-    @PatchMapping("/players/{id}")
-    ResponseEntity<?> changePlayerName(@PathVariable int id, @RequestBody @Valid Player partialUpdates) {
-        if(!repository.existsById(id)){
-            return ResponseEntity.notFound().build();
-        }
-        Player player = repository.findById(id).get();
-        if(!partialUpdates.getFirstName().isEmpty()) {
-            player.setFirstName(partialUpdates.getFirstName());
-        }
-        if(partialUpdates.getBirthDate() != null) {
-            player.setBirthDate(partialUpdates.getBirthDate());
-        }
-        repository.save(player);
-
-        return ResponseEntity.noContent().build();
-    }
 }

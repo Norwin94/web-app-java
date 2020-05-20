@@ -33,17 +33,6 @@ public class Match {
     }
 
     public Team getHomeTeam() {
-
-/*
-
-        List<List<String>> addresses = new ArrayList<List<String>>();
-        addresses.get(0);
-
-        List<String[]> add = new ArrayList<String[]>();
-        add.
-*/
-
-
         return homeTeam;
     }
 
