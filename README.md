@@ -19,12 +19,13 @@ bedzie mógł dodawac nowych uzytkowników oraz edytowac informacje odnosnie dru
 i piłkarzy.
 
 # 2 Wymagania
-Wymagania projektowe minimalne:
+#### Wymagania projektowe minimalne:
 * rejestracja nowych uzytkowników,
 * logowanie,
 * widok druzyn wraz z przypisanymi do nich piłkarzami,
-* edycja danych uzytkowników.
-Wymagania rozszerzone:
+* edycja danych uzytkowników.  
+
+#### Wymagania rozszerzone:
 * tabela ligowa ze zdobytymi punktami i bramkami,
 * statystyki piłkarzy (np. strzelone bramki),
 * edycja druzyn i piłkarzy przez adminów,
