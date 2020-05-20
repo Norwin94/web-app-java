@@ -8,7 +8,7 @@ Inz-e-sys w javie
 * authentication management: Keycloak.
 
 
-# 1 Załozenia projektu
+# 1. Załozenia projektu
 Celem projektu jest utworzenie aplikacji bazodanowej majacej symulowac rozgrywki ligowe klubów
 piłkarskich. Od strony zarzadzania rozgrywkami ma ona pomagac wpisywac terminarze i
 rezultaty spotkan, edytowac informacje dotyczace piłkarzy i druzyn, w których graja. Bedzie
@@ -18,7 +18,7 @@ uzytkownik bedzie miec dostep do danych statystycznych i edycji informacji o sob
 bedzie mógł dodawac nowych uzytkowników oraz edytowac informacje odnosnie druzyn
 i piłkarzy.
 
-# 2 Wymagania
+# 2. Wymagania
 #### Wymagania projektowe minimalne:
 * rejestracja nowych uzytkowników,
 * logowanie,
