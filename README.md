@@ -2,14 +2,7 @@
 Inz-e-sys w javie
 
 ![Main page](/screenshots/1_main_page.png)
-
-
-### Technologie:
-* frontend: HTML5, CSS, JavaScript, Thymeleaf, Three.js,
-* backend: Java, Spring Boot, JPA,
-* database: H2,
-* authentication management: Keycloak.
-
+7
 
 # 1. Załozenia projektu
 Celem projektu jest utworzenie aplikacji bazodanowej majacej symulowac rozgrywki ligowe klubów
@@ -32,4 +25,10 @@ i piłkarzy.
 * tabela ligowa ze zdobytymi punktami i bramkami,
 * statystyki piłkarzy (np. strzelone bramki),
 * edycja druzyn i piłkarzy przez adminów,
-* terminarz spotkan.
+* terminarz spotkan.  
+
+# 3. Technologie:
+* frontend: HTML5, CSS, JavaScript, Thymeleaf, Three.js,
+* backend: Java, Spring Boot, JPA,
+* database: H2,
+* authentication management: Keycloak.
