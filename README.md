@@ -2,7 +2,6 @@
 Inz-e-sys w javie
 
 ![Main page](/screenshots/1_main_page.png)
-Format: ![Alt Text](url)
 
 
 ### Technologie:
