@@ -2,9 +2,10 @@
 Inz-e-sys w javie
 
 ![Main page](/screenshots/1_main_page.png)
-7
+
 
 # 1. Załozenia projektu
+<p align="justify">
 Celem projektu jest utworzenie aplikacji bazodanowej majacej symulowac rozgrywki ligowe klubów
 piłkarskich. Od strony zarzadzania rozgrywkami ma ona pomagac wpisywac terminarze i
 rezultaty spotkan, edytowac informacje dotyczace piłkarzy i druzyn, w których graja. Bedzie
@@ -13,6 +14,7 @@ Do aplikacji bedzie mozna zalogowac sie jako administrator lub zwykły uzytkowni
 uzytkownik bedzie miec dostep do danych statystycznych i edycji informacji o sobie, administrator
 bedzie mógł dodawac nowych uzytkowników oraz edytowac informacje odnosnie druzyn
 i piłkarzy.
+</p>
 
 # 2. Wymagania
 #### Wymagania projektowe minimalne:
