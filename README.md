@@ -1,6 +1,10 @@
 # web-app-java
 Inz-e-sys w javie
 
+![Main page](/screenshots/1_main_page.png)
+Format: ![Alt Text](url)
+
+
 ### Technologie:
 * frontend: HTML5, CSS, JavaScript, Thymeleaf, Three.js,
 * backend: Java, Spring Boot, JPA,
